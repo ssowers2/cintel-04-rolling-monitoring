@@ -24,11 +24,16 @@ version = "0.1.0"
 # ============================================================
 
 dependencies = [
+    "altair>=6.3.0",
     # REQ: External packages used by the project code.
+    "arrow>=1.4.0",
     "datafun-toolkit", # WHY: Provides professional Python utilities for privacy-preserving logging.
     "marimo", # WHY: Enables reactive web app for app.py.
+    "pandas>=3.1.1",
     "polars[rtcompat]", # WHY: Fast DataFrame processing; rtcompat supports older CPUs.
-                        # OBS: If Polars causes issues, use pandas and adapt DataFrame operations.
+    # OBS: If Polars causes issues, use pandas and adapt DataFrame operations.
+    "py>=1.11.0",
+    "pyarrow>=26.0.1",
 ]
 
 # ============================================================
