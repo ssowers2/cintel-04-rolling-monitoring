@@ -13,9 +13,9 @@
 
 ## Project Overview
 
-Author: Sabriya Sowers
+**Author:** Sabriya Sowers
 
-Date: 2026 November
+**Date:** November 2026
 
 This project introduces rolling monitoring.
 
@@ -28,6 +28,8 @@ The project is configured in
 ## Data
 
 The example uses time-series system metrics from `data/`.
+
+The pipeline processes 60 time-series records.
 
 Each observation includes:
 
@@ -43,6 +45,9 @@ The pipeline uses Polars to:
 1. Read and order observations by timestamp.
 2. Calculate rolling averages over a defined window.
 3. Save the monitoring results for interpretation.
+
+The original pipeline uses a rolling window of 3 observations.
+For my experiment, I increased the window size to 5 observations.
 
 Explore these project components:
 
@@ -68,22 +73,23 @@ uv run python -m cintel.rolling_monitor
 ## Run the Reactive App
 
 From a VS Code terminal in the project root
-(hit CTRL + c to quit):
+(hit CTRL + C to quit):
 
 ```shell
-uv run marimo run  src/cintel/app.py
+uv run marimo run src/cintel/app.py
 ```
 
 ## Results
 
 The pipeline calculates rolling averages and writes
 `artifacts/rolling_metrics.csv`.
+
 Review the rolling measurements to understand
 how smoothing can reveal trends and reduce short-term variation.
 
 Successful execution produces a terminal message:
 
-```shell
+```text
 ========================
 Pipeline executed successfully!
 ========================
@@ -93,6 +99,92 @@ A `project.log` file is created in the project root.
 
 This confirms that the Python pipeline executes
 and the logging system works.
+
+## Custom Modifications
+
+### Experiment: Increasing the Rolling Window Size
+
+**What I changed:**
+
+For this experiment, I modified the rolling window size in
+`src/cintel/rolling_monitor.py` from 3 to 5 observations.
+
+**Why I chose this modification:**
+
+I wanted to understand how increasing the window size affects
+rolling averages and the ability to identify trends in system
+performance.
+
+**My prediction:**
+
+I predicted that increasing the window size would produce
+smoother rolling averages and reduce the impact of short-term
+fluctuations because more observations would be included
+in each calculation.
+
+**What actually happened:**
+
+Both versions of the pipeline executed successfully and
+processed 60 time-series records.
+
+The original pipeline used a window size of 3,
+while the modified pipeline used a window size of 5.
+
+The modified pipeline generated updated results in
+`artifacts/rolling_metrics.csv`.
+
+The calculated values have not yet been compared
+to confirm the smoothing effect.
+
+**What I learned:**
+
+I learned that changing the window size affects how rolling
+averages are calculated.
+
+A larger window includes more observations, which can help
+smooth short-term fluctuations but may also delay the
+detection of sudden changes.
+
+### Experiment Summary
+
+| Measurement | Original | Modified |
+|-------------|----------|----------|
+| Window size | 3 | 5 |
+| Records processed | 60 | 60 |
+| Pipeline execution | Successful | Successful |
+| Output file | rolling_metrics.csv | rolling_metrics.csv |
+
+**Modified Code:**
+
+```python
+WINDOW_SIZE: int = 5
+```
+
+The modification demonstrates how changing one setting
+can affect time-series monitoring.
+
+## Planned Project Customization
+
+After completing the rolling-window experiment, I plan
+to customize this project into a **Metadata Completeness
+& Governance Readiness Monitor**.
+
+This project builds on my previous work with data governance
+metrics by adding a time-based monitoring component.
+
+Using synthetic healthcare metadata, I plan to track:
+
+- Metadata completeness.
+- Data ownership assignments.
+- Data stewardship assignments.
+- Documentation gaps.
+
+The goal is to use rolling analytics to monitor governance
+readiness over time, identify trends, and highlight areas
+that may need additional attention.
+
+This customization will demonstrate how rolling monitoring
+can support data governance and data quality improvement.
 
 ## Verification
 
@@ -108,22 +200,21 @@ The [hosted documentation site](https://ssowers2.github.io/cintel-04-rolling-mon
 is published using Zensical and GitHub Pages.
 
 The documentation site is used to present the project report,
-covering such sections as data, methods, results, visualizations,
-interpretation, and conclusions.
+covering sections such as data, methods, results,
+visualizations, interpretation, and conclusions.
+
+The experiment is also documented in
+[docs/index.md](docs/index.md).
 
 ## CI/CD and GitHub Actions
 
-This project includes continuous integration and continuous deployment (CI/CD)
-to check project files and publish the docs.
+This project includes continuous integration and continuous
+deployment (CI/CD) to check project files and publish the docs.
 
 GitHub Actions include:
 
 - [CI: Python and Documentation Checks](https://github.com/ssowers2/cintel-04-rolling-monitoring/actions/workflows/ci-python-zensical.yml)
 - [CD: Documentation Deployment](https://github.com/ssowers2/cintel-04-rolling-monitoring/actions/workflows/deploy-zensical.yml)
-
-
-- [CI: Python and Documentation Checks](https://github.com/denisecase/cintel-04-rolling-monitoring/actions/workflows/ci-python-zensical.yml)
-- [CD: Documentation Deployment](https://github.com/denisecase/cintel-04-rolling-monitoring/actions/workflows/deploy-zensical.yml)
 
 ## Developer Reference
 
@@ -148,7 +239,7 @@ uv audit
 
 ### Set Up and Run Git Hooks
 
-Set up and run the git hooks to perform
+Set up and run the Git hooks to perform
 basic checks automatically before
 any changes get pushed to GitHub.
 
@@ -192,7 +283,7 @@ git push -u origin main
 ## Developer Notes
 
 - Use the **UP ARROW** and **DOWN ARROW** in the terminal to scroll through past commands.
-- Use `CTRL+f` to find (and replace) text within a file.
+- Use `CTRL+F` to find (and replace) text within a file.
 
 ## Developer Tools
 
@@ -210,6 +301,7 @@ testing, documentation, and code quality.
 
 - [GitHub Repository](https://github.com/ssowers2/cintel-04-rolling-monitoring)
 - [Hosted Documentation](https://ssowers2.github.io/cintel-04-rolling-monitoring/)
+- [Project Documentation Source](docs/index.md)
 - [Professional Python Workflow Guide](https://denisecase.github.io/pro-analytics-02/)
 - [Citation](CITATION.cff)
 - [License](LICENSE)
