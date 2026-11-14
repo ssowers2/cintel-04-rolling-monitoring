@@ -6,8 +6,8 @@ Run locally:
     uv run marimo edit src/cintel/governance_app.py
     uv run marimo run src/cintel/governance_app.py
 
-Data:
-    data/governance_metrics_timeseries.csv
+For a static WASM export, publish governance_metrics_timeseries.csv in the
+app's public/ directory and make Polars and Altair available in the browser.
 
 All historical observations are simulated for educational purposes.
 """
@@ -19,21 +19,20 @@ __generated_with = "0.25.2"
 app = marimo.App(width="full")
 
 
-# === CELL 1: IMPORTS ===
-
-
 @app.cell
-def _():
-    from pathlib import Path
+async def _():
+    import sys
+
+    if sys.platform == "emscripten":
+        import micropip
+
+        await micropip.install(["polars", "altair"])
 
     import altair as alt
     import marimo as mo
     import polars as pl
 
-    return Path, alt, mo, pl
-
-
-# === CELL 2: TITLE AND INTRODUCTION ===
+    return alt, mo, pl, sys
 
 
 @app.cell
@@ -43,40 +42,38 @@ def _(mo):
 
     **Project 04 | Rolling Monitoring**
 
-    This interactive dashboard explores how governance readiness
-    changes across 12 weeks of simulated metadata observations.
+    This interactive dashboard explores how governance readiness changes
+    across 12 weeks of simulated metadata observations.
 
-    Use the rolling-window slider to compare weekly performance
-    against smoothed trends.
+    Use the rolling-window slider to compare weekly performance against
+    smoothed trends.
 
-    **Data source:** Synthetic healthcare metadata inventory
-    carried forward from Project 03.
+    **Data source:** Synthetic healthcare metadata inventory carried forward
+    from Project 03.
 
-    **Note:** Historical measurements are simulated.
-    No patient information is included.
+    **Note:** Historical measurements are simulated. No patient information
+    is included.
     """)
 
 
-# === CELL 3: LOAD GOVERNANCE DATA ===
-
-
 @app.cell
-def _(Path, pl):
-    data_file = (
-        Path(__file__).resolve().parents[2]
-        / "data"
-        / "governance_metrics_timeseries.csv"
-    )
+def _(mo, pl, sys):
+    notebook_location = mo.notebook_location()
+    if notebook_location is None:
+        raise RuntimeError("Unable to determine notebook location.")
 
-    df = pl.read_csv(
-        data_file,
-        try_parse_dates=True,
-    ).sort("week")
+    filename = "governance_metrics_timeseries.csv"
+    if sys.platform == "emscripten":
+        from pyodide.http import open_url  # ty: ignore[unresolved-import]
 
+        data_url = notebook_location / "public" / filename
+        df = pl.read_csv(open_url(str(data_url)), try_parse_dates=True)
+    else:
+        data_path = notebook_location.parents[1] / "data" / filename
+        df = pl.read_csv(data_path, try_parse_dates=True)
+
+    df = df.sort("week")
     return (df,)
-
-
-# === CELL 4: ROLLING WINDOW SLIDER ===
 
 
 @app.cell
@@ -88,12 +85,8 @@ def _(mo):
         step=1,
         label="Rolling window (weeks)",
     )
-
     window_size  # noqa: B018
     return (window_size,)
-
-
-# === CELL 5: CALCULATE ROLLING AVERAGES ===
 
 
 @app.cell
@@ -114,11 +107,7 @@ def _(df, pl, window_size):
             for metric in metrics
         ]
     )
-
     return (df_rolling,)
-
-
-# === CELL 6: GOVERNANCE METRIC SELECTOR ===
 
 
 @app.cell
@@ -133,12 +122,8 @@ def _(mo):
         value="Metadata completeness",
         label="Select governance metric",
     )
-
     metric_selector  # noqa: B018
     return (metric_selector,)
-
-
-# === CELL 7: INTERACTIVE LINE CHART ===
 
 
 @app.cell
@@ -153,6 +138,7 @@ def _(alt, df_rolling, metric_selector, mo, pl, window_size):
                 f"{selected_metric}_rolling_mean",
             ]
         )
+        .with_columns(pl.col("week").cast(pl.String))
         .rename(
             {
                 selected_metric: "Weekly value",
@@ -165,11 +151,11 @@ def _(alt, df_rolling, metric_selector, mo, pl, window_size):
             value_name="Percentage",
         )
         .filter(pl.col("Percentage").is_not_null())
-        .to_pandas()
+        .to_dicts()
     )
 
     chart = (
-        alt.Chart(chart_data)
+        alt.Chart(alt.Data(values=chart_data))
         .mark_line(point=True, strokeWidth=3)
         .encode(
             x=alt.X("week:T", title="Week"),
@@ -178,22 +164,15 @@ def _(alt, df_rolling, metric_selector, mo, pl, window_size):
                 title="Percentage (%)",
                 scale=alt.Scale(domain=[0, 100]),
             ),
-            color=alt.Color(
-                "Series:N",
-                title="Metric",
-            ),
+            color=alt.Color("Series:N", title="Metric"),
             tooltip=[
                 alt.Tooltip("week:T", title="Week"),
                 alt.Tooltip("Series:N", title="Series"),
-                alt.Tooltip(
-                    "Percentage:Q",
-                    title="Percentage",
-                    format=".2f",
-                ),
+                alt.Tooltip("Percentage:Q", title="Percentage", format=".2f"),
             ],
         )
         .properties(
-            title=(f"Weekly Performance vs. {window_size.value}-Week Rolling Average"),
+            title=f"Weekly Performance vs. {window_size.value}-Week Rolling Average",
             width=650,
             height=360,
         )
@@ -201,9 +180,6 @@ def _(alt, df_rolling, metric_selector, mo, pl, window_size):
     )
 
     mo.ui.altair_chart(chart)
-
-
-# === CELL 8: GOVERNANCE DATA TABLE ===
 
 
 @app.cell
@@ -216,45 +192,33 @@ def _(df_rolling, mo):
     )
 
 
-# === CELL 9: INTERPRETATION ===
-
-
 @app.cell
 def _(mo):
     mo.md("""
     ## Understanding the Results
 
-    **Weekly values** show governance performance at each
-    simulated observation.
+    **Weekly values** show governance performance at each simulated observation.
 
-    **Rolling averages** smooth short-term fluctuations to
-    make longer-term trends easier to identify.
+    **Rolling averages** smooth short-term fluctuations to make longer-term
+    trends easier to identify.
 
-    The first observations have no rolling average until
-    enough weeks are available to fill the selected window.
+    The first observations have no rolling average until enough weeks are
+    available to fill the selected window.
 
     ### Governance Interpretation
 
-    - **Metadata completeness:** Measures the percentage of
-      assets with required metadata fields populated.
-    - **Ownership coverage:** Measures assets with an
-      assigned data owner.
-    - **Stewardship coverage:** Measures assets with an
-      assigned data steward.
-    - **Documentation gaps:** Measures assets missing a
-      description or business definition.
+    - **Metadata completeness:** Percentage of assets with required metadata.
+    - **Ownership coverage:** Assets with an assigned data owner.
+    - **Stewardship coverage:** Assets with an assigned data steward.
+    - **Documentation gaps:** Assets missing a description or business definition.
 
-    Higher completeness, ownership, and stewardship percentages
-    generally indicate stronger governance readiness.
+    Higher completeness, ownership, and stewardship percentages generally
+    indicate stronger governance readiness. Lower documentation-gap
+    percentages indicate improvement.
 
-    Lower documentation-gap percentages indicate improvement.
-
-    These results are simulated and should not be interpreted
-    as actual organizational performance.
+    These results are simulated and do not represent actual organizational
+    performance.
     """)
-
-
-# === CELL 10: CLOSING ===
 
 
 @app.cell
@@ -268,9 +232,6 @@ def _(mo):
 
     Built with Python, Polars, Altair, and Marimo.
     """)
-
-
-# === CONDITIONAL EXECUTION GUARD ===
 
 
 if __name__ == "__main__":
