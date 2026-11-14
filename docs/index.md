@@ -208,10 +208,9 @@ The most important limitation is that the historical governance values are simul
 
 ### Interactive Applications
 
-- [Original Rolling Monitoring App (Source Code)](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/app.py)
-- [Governance Readiness Dashboard (Source Code)](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_app.py)
-
-Both applications can be run locally using Marimo. Publishing the interactive dashboards to GitHub Pages is a separate deployment step.
+- **[Launch Governance Readiness Dashboard](https://ssowers2.github.io/cintel-04-rolling-monitoring/governance/)** — Explore weekly metadata completeness, ownership, stewardship, and documentation trends using an interactive chart and rolling-window controls.
+- [Governance Dashboard Python Source](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_app.py)
+- [Launch Original Rolling Monitoring App](https://ssowers2.github.io/cintel-04-rolling-monitoring/app/) — Instructor's original system monitoring example.
 
 ## Project Links
 
