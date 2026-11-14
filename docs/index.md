@@ -129,7 +129,7 @@ The latest full test run reported:
 | Original rolling monitoring pipeline | Passed |
 | Original application test | Passed |
 
-**Four tests passed. Overall coverage was 33.19%, exceeding the required 20%.** Both rolling monitoring modules reached 97% coverage in that run. The interactive Marimo dashboard was reviewed in the browser but its individual cells were not exercised by the automated tests.
+**Four tests passed. Overall coverage was 32.24%, exceeding the required 20%.** Both rolling monitoring modules reached 97% coverage in that run. The interactive Marimo dashboard was reviewed locally in the browser but its individual cells were not exercised by the automated tests.
 
 ## Interpretation
 
@@ -200,22 +200,42 @@ The most important limitation is that the historical governance values are simul
 
 ## Documentation Index
 
-- **Home** — this landing page.
+- **Home** — Project 04 overview and experiment report.
 - [Project Instructions](project-instructions.md)
 - [Glossary](glossary.md)
-- [API](api.md)
-- [Reactive App](./app/index.html) — existing published app link; not necessarily the governance dashboard.
+- [API Documentation](api.md)
+- [GitHub Repository](https://github.com/ssowers2/cintel-04-rolling-monitoring)
+
+### Interactive Applications
+
+- [Original Rolling Monitoring App (Source Code)](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/app.py)
+- [Governance Readiness Dashboard (Source Code)](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_app.py)
+
+Both applications can be run locally using Marimo. Publishing the interactive dashboards to GitHub Pages is a separate deployment step.
 
 ## Project Links
 
-- [GitHub Repository](https://github.com/ssowers2/cintel-04-rolling-monitoring)
-- [Original Rolling Monitoring Pipeline](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/rolling_monitor.py)
+### My Governance Monitoring Customization
+
+- [Interactive Governance Dashboard (Python Source)](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_app.py)
 - [Governance Monitoring Pipeline](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_monitor.py)
-- [Governance Dashboard Source](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/governance_app.py)
-- [Original System Dataset](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/system_metrics_timeseries.csv)
-- [Governance Weekly Metrics](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/governance_metrics_timeseries.csv)
-- [Results and Artifacts](https://github.com/ssowers2/cintel-04-rolling-monitoring/tree/main/artifacts)
-- [Published Documentation](https://ssowers2.github.io/cintel-04-rolling-monitoring/)
+- [Governance History Generator](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/generate_governance_history.py)
+- [Synthetic Metadata Inventory](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/metadata_inventory.csv)
+- [Weekly Governance Metrics](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/governance_metrics_timeseries.csv)
+- [Weekly Governance Inventory Snapshots](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/governance_inventory_timeseries.csv)
+- [Governance Rolling Results](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/artifacts/governance_rolling_metrics.csv)
+
+### Original Rolling Monitoring Example
+
+- [Original Marimo Application](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/app.py)
+- [Original Rolling Monitoring Pipeline](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/src/cintel/rolling_monitor.py)
+- [System Metrics Dataset](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/data/system_metrics_timeseries.csv)
+- [Original Rolling Results](https://github.com/ssowers2/cintel-04-rolling-monitoring/blob/main/artifacts/rolling_metrics.csv)
+
+### Project Website and Documentation
+
+- [GitHub Repository](https://github.com/ssowers2/cintel-04-rolling-monitoring)
+- [Published Project Documentation](https://ssowers2.github.io/cintel-04-rolling-monitoring/)
 
 ## Project Resources
 

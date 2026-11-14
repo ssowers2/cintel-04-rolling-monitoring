@@ -133,6 +133,25 @@ jobs:
         # OBS: Zensical outputs to site/ by default; update this path if zensical.toml
         #      configures a different output directory.
 
+      - name: Export original Marimo app
+        run: |
+          mkdir -p site/app
+          uv run marimo export html-wasm src/cintel/app.py \
+            -o site/app/index.html --mode run
+
+      - name: Export governance dashboard
+        run: |
+          mkdir -p site/governance
+          uv run marimo export html-wasm src/cintel/governance_app.py \
+            -o site/governance/index.html --mode run
+
+      - name: Include dashboard CSV files
+        run: |
+          mkdir -p site/app/public
+          mkdir -p site/governance/public
+          cp data/system_metrics_timeseries.csv site/app/public/
+          cp data/governance_metrics_timeseries.csv site/governance/public/
+
       - name: D3) Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:

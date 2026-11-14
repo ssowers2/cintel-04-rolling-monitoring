@@ -52,11 +52,11 @@
 # ============================================================
 
 [project]
-site_name = "Rolling Monitoring | Sabriya Sowers"
+site_name = "Rolling Monitoring & Governance Readiness | Sabriya Sowers"
 site_url = "https://ssowers2.github.io/cintel-04-rolling-monitoring/"
 repo_url = "https://github.com/ssowers2/cintel-04-rolling-monitoring"
 repo_name = "cintel-04-rolling-monitoring"
-site_description = "Analyzing time-series data using rolling averages to monitor trends and changes in system performance."
+site_description = "Using rolling averages to monitor system performance, metadata completeness, and data governance readiness."
 docs_dir = "docs"
 site_dir = "site"
 edit_uri = "edit/main/docs/"
