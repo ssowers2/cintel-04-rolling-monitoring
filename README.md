@@ -156,6 +156,10 @@ The original application demonstrates rolling monitoring using system performanc
 
 ### Governance Readiness Dashboard
 
+**[Launch the Interactive Governance Readiness Dashboard](https://ssowers2.github.io/cintel-04-rolling-monitoring/governance/)**
+
+Explore weekly governance measurements, compare rolling averages, and adjust the metric and rolling-window size directly in your browser.
+
 ```shell
 uv run marimo run src/cintel/governance_app.py
 ```
@@ -221,6 +225,10 @@ For governance monitoring:
 - Decreasing documentation gaps may indicate improvements in metadata quality.
 
 These interpretations are illustrative because the historical observations were simulated.
+
+Because the dashboard is interactive, the displayed rolling averages change based on the selected governance metric and rolling-window size. A shorter window responds more quickly to weekly changes, while a longer window generally produces a smoother trend but may respond more slowly to recent changes. Users can explore these differences without changing the underlying weekly data.
+
+The dashboard is intended to demonstrate how rolling monitoring can support governance analysis, rather than establish a single conclusion for every possible combination of settings.
 
 ## Custom Modifications
 
@@ -322,7 +330,7 @@ The latest full test execution completed successfully:
 
 **Results:** Four tests passed.
 
-**Overall code coverage:** 33.19%.
+**Overall code coverage:** 32.24%.
 
 **Required coverage:** 20%.
 
